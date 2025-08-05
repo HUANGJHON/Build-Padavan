@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout
@@ -34,17 +34,16 @@ jobs:
         free -h
         
         sudo apt-get update
-        sudo apt-get -y install automake autopoint unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
-        fakeroot kmod cpio git python-docutils python3-docutils gettext \
-        texinfo build-essential help2man pkg-config \
-        zlib1g-dev gnutls-dev libgmp3-dev \
+        sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
+        fakeroot kmod cpio git python-docutils gettext automake autopoint \
+        texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
     - name: Clone source code
       run: |
         echo 'current dir:'
         pwd
         mkdir -p /opt/rt-n56u
-        git clone --depth=1 https://github.com/vb1980/Padavan-KVR.git /opt/rt-n56u
+        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
         sed -i 's/192.168.2/192.168.68/g' /opt/rt-n56u/trunk/user/shared/defaults.h
         sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
         sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
