@@ -42,29 +42,28 @@ jobs:
       run: |
         echo 'current dir:'
         pwd
-        mkdir -p /mnt/rt-n56u
-        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /mnt/rt-n56u
-        sed -i 's/192.168.2/192.168.68/g' /mnt/rt-n56u/trunk/user/shared/defaults.h
-        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /mnt/rt-n56u/trunk/user/shared/defaults.h
-        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /mnt/rt-n56u/trunk/user/shared/defaults.h
-        echo 'cat /mnt/rt-n56u/trunk/user/shared/defaults.h:'
-        cat /mnt/rt-n56u/trunk/user/shared/defaults.h
+        mkdir -p /opt/rt-n56u
+        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
+        sed -i 's/192.168.2/192.168.68/g' /opt/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
+        echo 'cat /opt/rt-n56u/trunk/user/shared/defaults.h:'
+        cat /opt/rt-n56u/trunk/user/shared/defaults.h
         
-        echo 'cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
-        cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
+        echo 'cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
+        cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
         
-        rm -f /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
+        rm -f /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
+        cp -vpf l1profile.dat /opt/rt-n56u/trunk/configs/boards/JDC-1
         
-        cp -vpf l1profile.dat /mnt/rt-n56u/trunk/configs/boards/JDC-1
+        echo 'cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
+        cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
         
-        echo 'cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
-        cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
-        
-        cd /mnt/rt-n56u/toolchain-mipsel
+        cd /opt/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
 
-        echo 'Run ls -la /mnt/rt-n56u/toolchain-mipsel:'
-        ls -la /mnt/rt-n56u/toolchain-mipsel
+        echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
+        ls -la /opt/rt-n56u/toolchain-mipsel
         mkdir -p /mnt/images/
     - name: Build Firmware
       env:
@@ -78,7 +77,6 @@ jobs:
         sudo ./build_firmware_modify $TNAME 0
         sudo mv -f images/*.trx /mnt/images
         sudo cp -vpf .config /mnt/images
-        # done
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
