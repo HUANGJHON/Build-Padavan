@@ -64,21 +64,21 @@ jobs:
 
         echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
         ls -la /opt/rt-n56u/toolchain-mipsel
-        mkdir -p /mnt/images/
+        mkdir -p /opt/images/
     - name: Build Firmware
       env:
         TNAME: "JDC-1"
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        cp -vpf $TNAME.config /mnt/rt-n56u/trunk/.config
-        cat /mnt/rt-n56u/trunk/.config
-        cd /mnt/rt-n56u/trunk
+        cp -vpf $TNAME.config /opt/rt-n56u/trunk/.config
+        cat /opt/rt-n56u/trunk/.config
+        cd /opt/rt-n56u/trunk
         sudo ./clear_tree_simple
         sudo ./build_firmware_modify $TNAME 0
-        sudo mv -f images/*.trx /mnt/images
-        sudo cp -vpf .config /mnt/images
+        sudo mv -f images/*.trx /opt/images
+        sudo cp -vpf .config /opt/images
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
         name: Padavan-MT7621-JDC-1-C${{ env.FILE_DATE }}
-        path: /mnt/images
+        path: /opt/images
