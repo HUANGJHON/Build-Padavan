@@ -42,34 +42,45 @@ jobs:
       run: |
         echo 'current dir:'
         pwd
-        mkdir -p /opt/rt-n56u
-        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
-        sed -i 's/192.168.2/192.168.68/g' /opt/rt-n56u/trunk/user/shared/defaults.h
-        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
-        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
-        echo 'cat /opt/rt-n56u/trunk/user/shared/defaults.h:'
-        cat /opt/rt-n56u/trunk/user/shared/defaults.h
-        cd /opt/rt-n56u/toolchain-mipsel
+        mkdir -p /mnt/rt-n56u
+        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /mnt/rt-n56u
+        sed -i 's/192.168.2/192.168.68/g' /mnt/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /mnt/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /mnt/rt-n56u/trunk/user/shared/defaults.h
+        echo 'cat /mnt/rt-n56u/trunk/user/shared/defaults.h:'
+        cat /mnt/rt-n56u/trunk/user/shared/defaults.h
+        
+        echo 'cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
+        cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
+        
+        rm -f /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
+        
+        cp -vpf l1profile.dat /mnt/rt-n56u/trunk/configs/boards/JDC-1
+        
+        echo 'cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
+        cat /mnt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
+        
+        cd /mnt/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
 
-        echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
-        ls -la /opt/rt-n56u/toolchain-mipsel
-        mkdir -p /opt/images/
+        echo 'Run ls -la /mnt/rt-n56u/toolchain-mipsel:'
+        ls -la /mnt/rt-n56u/toolchain-mipsel
+        mkdir -p /mnt/images/
     - name: Build Firmware
       env:
         TNAME: "JDC-1"
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        cp -vpf $TNAME.config /opt/rt-n56u/trunk/.config
-        cat /opt/rt-n56u/trunk/.config
-        cd /opt/rt-n56u/trunk
+        cp -vpf $TNAME.config /mnt/rt-n56u/trunk/.config
+        cat /mnt/rt-n56u/trunk/.config
+        cd /mnt/rt-n56u/trunk
         sudo ./clear_tree_simple
         sudo ./build_firmware_modify $TNAME 0
-        sudo mv -f images/*.trx /opt/images
-        sudo cp -vpf .config /opt/images
+        sudo mv -f images/*.trx /mnt/images
+        sudo cp -vpf .config /mnt/images
         # done
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: Padavan-MT7621-JDC-1-I${{ env.FILE_DATE }}
-        path: /opt/images
+        name: Padavan-MT7621-JDC-1-C${{ env.FILE_DATE }}
+        path: /mnt/images
