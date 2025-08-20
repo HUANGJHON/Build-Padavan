@@ -53,7 +53,7 @@ jobs:
     - name: Build Firmware
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        cp -vpf $TNAME.config /opt/rt-n56u/trunk/.config
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
         cat /opt/rt-n56u/trunk/.config
         cd /opt/rt-n56u/trunk
         sudo ./clear_tree_simple
