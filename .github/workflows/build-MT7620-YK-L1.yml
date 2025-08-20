@@ -31,15 +31,15 @@ jobs:
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
 
-        sudo mkdir -p /mnt/opt
-        sudo chown $USER:$GROUPS /mnt/opt
+        mkdir -p /mnt/opt
+        chown $USER:$GROUPS /mnt/opt
         
     - name: Clone source code
       run: |
         echo 'current dir:'
         pwd
-        sudo mkdir -p /mnt/opt/rt-n56u
-        sudo ln -sf /mnt/opt/rt-n56u /opt/rt-n56u
+        mkdir -p /mnt/opt/rt-n56u
+        ln -sf /mnt/opt/rt-n56u /opt/rt-n56u
         
         git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
         sed -i 's/192.168.2/192.168.11/g' /opt/rt-n56u/trunk/user/shared/defaults.h
@@ -53,18 +53,18 @@ jobs:
 
         echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
         ls -la /opt/rt-n56u/toolchain-mipsel
-        sudo mkdir -p /opt/images/
+        mkdir -p /opt/images/
         
     - name: Build Firmware
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        sudo cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
         cat /opt/rt-n56u/trunk/.config
         cd /opt/rt-n56u/trunk
         ./clear_tree_simple
         fakeroot ./build_firmware_modify $TNAME 0
-        sudo mv -f images/*.trx /opt/images
-        sudo cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/images
+        mv -f images/*.trx /opt/images
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/images
         
     - name : Upload artifact
       uses: actions/upload-artifact@main
