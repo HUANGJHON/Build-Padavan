@@ -1,4 +1,4 @@
-name: Build MT7620-YK-L1
+name: Build MT7620 YK-L1
 
 on: 
   repository_dispatch:
