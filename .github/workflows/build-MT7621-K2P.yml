@@ -38,6 +38,7 @@ jobs:
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+        
     - name: Clone source code
       run: |
         echo 'current dir:'
@@ -50,21 +51,13 @@ jobs:
         echo 'cat /opt/rt-n56u/trunk/user/shared/defaults.h:'
         cat /opt/rt-n56u/trunk/user/shared/defaults.h
         
-        echo 'cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
-        cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
-        
-        rm -f /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
-        cp -vpf l1profile.dat /opt/rt-n56u/trunk/configs/boards/JDC-1
-        
-        echo 'cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
-        cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
-        
         cd /opt/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
 
         echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
         ls -la /opt/rt-n56u/toolchain-mipsel
         mkdir -p /opt/images/
+        
     - name: Build Firmware
       env:
         TNAME: "K2P"
@@ -77,6 +70,7 @@ jobs:
         sudo ./build_firmware_modify $TNAME 0
         sudo mv -f images/*.trx /opt/images
         sudo cp -vpf .config /opt/images
+        
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
