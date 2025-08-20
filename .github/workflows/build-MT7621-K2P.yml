@@ -31,13 +31,14 @@ jobs:
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
         
-        mkdir -p /mnt/opt
-        chown $USER:$GROUPS /mnt/opt
-        
+  
     - name: Clone source code
       run: |
         echo 'current dir:'
         pwd
+        
+        mkdir -p /mnt/opt
+        chown $USER:$GROUPS /mnt/opt
         mkdir -p /mnt/opt/rt-n56u
         ln -sf /mnt/opt/rt-n56u /opt/rt-n56u
         
