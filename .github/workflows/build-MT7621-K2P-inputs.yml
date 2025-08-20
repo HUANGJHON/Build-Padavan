@@ -1,0 +1,79 @@
+name: Build MT7621-K2P
+
+on: 
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        echo 'Run lscpu:'
+        lscpu
+        echo 'Run df -h:'
+        df -h
+        echo 'Run free -h:'
+        free -h
+        
+        sudo apt-get update
+        sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
+        fakeroot kmod cpio git python3-docutils gettext automake autopoint \
+        texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
+        libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+        
+    - name: Clone source code
+      run: |
+        echo 'current dir:'
+        pwd
+        mkdir -p /opt/rt-n56u
+        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
+        sed -i 's/192.168.2/192.168.6/g' /opt/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
+        echo 'cat /opt/rt-n56u/trunk/user/shared/defaults.h:'
+        cat /opt/rt-n56u/trunk/user/shared/defaults.h
+        
+        cd /opt/rt-n56u/toolchain-mipsel
+        sh dl_toolchain.sh
+
+        echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
+        ls -la /opt/rt-n56u/toolchain-mipsel
+        mkdir -p /opt/images/
+
+    - name: SSH connection to Actions
+      uses: P3TERX/ssh2actions@main
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      env:
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        
+    - name: Build Firmware
+      env:
+        TNAME: "K2P"
+      run: |
+        echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        cp -vpf $TNAME.config /opt/rt-n56u/trunk/.config
+        cat /opt/rt-n56u/trunk/.config
+        cd /opt/rt-n56u/trunk
+        sudo ./clear_tree_simple
+        sudo ./build_firmware_modify $TNAME 0
+        sudo mv -f images/*.trx /opt/images
+        sudo cp -vpf .config /opt/images
+        
+    - name : Upload artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: Padavan-MT7621-K2P-C${{ env.FILE_DATE }}
+        path: /opt/images
