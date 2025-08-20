@@ -30,7 +30,7 @@ jobs:
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
-
+        
         mkdir -p /mnt/opt
         chown $USER:$GROUPS /mnt/opt
         
@@ -50,7 +50,7 @@ jobs:
         
         cd /opt/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
-
+        
         echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
         ls -la /opt/rt-n56u/toolchain-mipsel
         mkdir -p /opt/images/
