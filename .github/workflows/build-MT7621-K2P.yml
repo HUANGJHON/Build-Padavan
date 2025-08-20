@@ -3,17 +3,9 @@ name: Build MT7621-K2P
 on: 
   repository_dispatch:
   workflow_dispatch:
-  #  release:
-    #  types: [published]
-#  push:
-#    tags:
-#    - 'v*'
-  #  branches: 
-  #    - master
-#  schedule:
- #   - cron: 0 17 * * 4
-#  watch:
-   # types: [started]
+
+env:
+  TNAME: "K2P"
 
 jobs:
   build:
@@ -59,8 +51,6 @@ jobs:
         mkdir -p /opt/images/
         
     - name: Build Firmware
-      env:
-        TNAME: "K2P"
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
         cp -vpf $TNAME.config /opt/rt-n56u/trunk/.config
