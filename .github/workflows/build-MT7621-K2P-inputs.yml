@@ -35,25 +35,29 @@ jobs:
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+
+        sudo mkdir -p /mnt/workdir
+        sudo chown $USER:$GROUPS /mnt/workdir
+        # ln -sf /mnt/workdir/rt-n56u $GITHUB_WORKSPACE/rt-n56u
         
     - name: Clone source code
       run: |
         echo 'current dir:'
         pwd
-        mkdir -p /opt/rt-n56u
-        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
-        sed -i 's/192.168.2/192.168.6/g' /opt/rt-n56u/trunk/user/shared/defaults.h
-        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
-        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
-        echo 'cat /opt/rt-n56u/trunk/user/shared/defaults.h:'
-        cat /opt/rt-n56u/trunk/user/shared/defaults.h
+        mkdir -p /mnt/workdir/rt-n56u
+        git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /mnt/workdir/rt-n56u
+        sed -i 's/192.168.2/192.168.6/g' /mnt/workdir/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /mnt/workdir/rt-n56u/trunk/user/shared/defaults.h
+        sed -i 's/2001:470:0:50::2/time.asia.apple.com/g' /mnt/workdir/rt-n56u/trunk/user/shared/defaults.h
+        echo 'cat /mnt/workdir/rt-n56u/trunk/user/shared/defaults.h:'
+        cat /mnt/workdir/rt-n56u/trunk/user/shared/defaults.h
         
-        cd /opt/rt-n56u/toolchain-mipsel
+        cd /mnt/workdir/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
 
-        echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
-        ls -la /opt/rt-n56u/toolchain-mipsel
-        mkdir -p /opt/images/
+        echo 'Run ls -la /mnt/workdir/rt-n56u/toolchain-mipsel:'
+        ls -la /mnt/workdir/rt-n56u/toolchain-mipsel
+        mkdir -p /mnt/workdir/images/
 
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -65,16 +69,16 @@ jobs:
     - name: Build Firmware
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
-        cat /opt/rt-n56u/trunk/.config
-        cd /opt/rt-n56u/trunk
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /mnt/workdir/rt-n56u/trunk/.config
+        cat /mnt/workdir/rt-n56u/trunk/.config
+        cd /mnt/workdir/rt-n56u/trunk
         sudo ./clear_tree_simple
         sudo ./build_firmware_modify $TNAME 0
-        sudo mv -f images/*.trx /opt/images
-        sudo cp -vpf .config /opt/images
+        sudo mv -f images/*.trx /mnt/workdir/images
+        sudo cp -vpf .config /mnt/workdir/images
         
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
         name: Padavan-MT7621-K2P-C${{ env.FILE_DATE }}
-        path: /opt/images
+        path: /mnt/workdir/images
