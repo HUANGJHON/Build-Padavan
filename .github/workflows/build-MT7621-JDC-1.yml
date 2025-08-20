@@ -1,4 +1,4 @@
-name: Build MT7621 JDC-1
+name: Build-MT7621-JDC-1
 
 on: 
   repository_dispatch:
@@ -30,11 +30,17 @@ jobs:
         fakeroot kmod cpio git python3-docutils gettext automake autopoint \
         texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
         libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
+
+        mkdir -p /mnt/opt
+        chown $USER:$GROUPS /mnt/opt
+        
     - name: Clone source code
       run: |
         echo 'current dir:'
         pwd
-        mkdir -p /opt/rt-n56u
+        mkdir -p /mnt/opt/rt-n56u
+        ln -sf /mnt/opt/rt-n56u /opt/rt-n56u
+        
         git clone --depth=1 https://github.com/CopyPasteByteArtist/chongshengB-rt-n56u.git /opt/rt-n56u
         sed -i 's/192.168.2/192.168.68/g' /opt/rt-n56u/trunk/user/shared/defaults.h
         sed -i 's/ntp1.aliyun.com/time.pool.aliyun.com/g' /opt/rt-n56u/trunk/user/shared/defaults.h
@@ -57,16 +63,18 @@ jobs:
         echo 'Run ls -la /opt/rt-n56u/toolchain-mipsel:'
         ls -la /opt/rt-n56u/toolchain-mipsel
         mkdir -p /opt/images/
+        
     - name: Build Firmware
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
         cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
         cat /opt/rt-n56u/trunk/.config
         cd /opt/rt-n56u/trunk
-        sudo ./clear_tree_simple
-        sudo ./build_firmware_modify $TNAME 0
-        sudo mv -f images/*.trx /opt/images
-        sudo cp -vpf .config /opt/images
+        ./clear_tree_simple
+        fakeroot ./build_firmware_modify $TNAME 0
+        mv -f images/*.trx /opt/images
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/images
+        
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
