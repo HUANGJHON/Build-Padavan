@@ -3,17 +3,9 @@ name: Build MT7621 JDC-1
 on: 
   repository_dispatch:
   workflow_dispatch:
-  #  release:
-    #  types: [published]
-#  push:
-#    tags:
-#    - 'v*'
-  #  branches: 
-  #    - master
-#  schedule:
- #   - cron: 0 17 * * 4
-#  watch:
-   # types: [started]
+
+env:
+  TNAME: "JDC-1"
 
 jobs:
   build:
@@ -54,7 +46,7 @@ jobs:
         cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
         
         rm -f /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
-        cp -vpf l1profile.dat /opt/rt-n56u/trunk/configs/boards/JDC-1
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/l1profile.dat /opt/rt-n56u/trunk/configs/boards/JDC-1
         
         echo 'cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat'
         cat /opt/rt-n56u/trunk/configs/boards/JDC-1/l1profile.dat
@@ -66,11 +58,9 @@ jobs:
         ls -la /opt/rt-n56u/toolchain-mipsel
         mkdir -p /opt/images/
     - name: Build Firmware
-      env:
-        TNAME: "JDC-1"
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        cp -vpf $TNAME.config /opt/rt-n56u/trunk/.config
+        cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
         cat /opt/rt-n56u/trunk/.config
         cd /opt/rt-n56u/trunk
         sudo ./clear_tree_simple
