@@ -37,8 +37,8 @@ jobs:
         echo 'current dir:'
         pwd
         
-        mkdir -p /mnt/opt
-        chown $USER:$GROUPS /mnt/opt
+        # mkdir -p /mnt/opt
+        chown $USER:$GROUPS /mnt
         mkdir -p /mnt/opt/rt-n56u
         ln -sf /mnt/opt/rt-n56u /opt/rt-n56u
         
