@@ -67,6 +67,11 @@ jobs:
         mv -f images/*.trx /opt/images
         cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/images
 
+        echo 'Run df -h:'
+        df -h
+        echo 'Run free -h:'
+        free -h
+
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
