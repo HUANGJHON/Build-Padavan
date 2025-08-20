@@ -1,4 +1,4 @@
-name: Build MT7621-K2P
+name: Build MT7621 K2P
 
 on: 
   repository_dispatch:
@@ -69,5 +69,5 @@ jobs:
     - name : Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: Padavan-MT7621-K2P-C${{ env.FILE_DATE }}
+        name: Padavan-MT7621-$TNAME-C${{ env.FILE_DATE }}
         path: /opt/images
