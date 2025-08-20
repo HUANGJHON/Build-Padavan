@@ -1,4 +1,4 @@
-name: Build MT7621-K2P
+name: Build MT7621-K2P-SSH
 
 on: 
   repository_dispatch:
@@ -8,6 +8,9 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
+
+env:
+  TNAME: "K2P"
 
 jobs:
   build:
@@ -60,8 +63,6 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         
     - name: Build Firmware
-      env:
-        TNAME: "K2P"
       run: |
         echo "FILE_DATE=-$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
         cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/rt-n56u/trunk/.config
