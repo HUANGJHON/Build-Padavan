@@ -66,6 +66,11 @@ jobs:
         fakeroot ./build_firmware_modify $TNAME 0
         mv -f images/*.trx /opt/images
         cp -vpf $GITHUB_WORKSPACE/$TNAME/$TNAME.config /opt/images
+
+        echo 'Run df -h:'
+        df -h
+        echo 'Run free -h:'
+        free -h
         
     - name : Upload artifact
       uses: actions/upload-artifact@main
