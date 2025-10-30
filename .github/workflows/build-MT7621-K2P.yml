@@ -44,7 +44,7 @@ jobs:
         mkdir -p /mnt/opt/rt-n56u
         ln -sf /mnt/opt/rt-n56u /opt/rt-n56u
         
-        git clone --depth=1 https://github.com/HUANGJHON/Padavan-3.4-KV.git /opt/rt-n56u
+        git clone --depth=1 https://github.com/HUANGJHON/Padavan-3.4-KVR.git /opt/rt-n56u
         echo 'cat /opt/rt-n56u/trunk/user/shared/defaults.h:'
         cat /opt/rt-n56u/trunk/user/shared/defaults.h
         
