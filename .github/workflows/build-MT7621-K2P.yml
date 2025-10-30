@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  TNAME: "G-AX1800"
+  TNAME: "CR660x"
 
 jobs:
   build:
