@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  TNAME: "K2P"
+  TNAME: "B70"
 
 jobs:
   build:
