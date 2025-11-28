@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  TNAME: "E8820V2"
+  TNAME: "WR1200JS"
 
 jobs:
   build:
